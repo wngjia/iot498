@@ -1,6 +1,6 @@
 # iot498
 
-1. Install JDK, Maven, Eclipse JDT
+1. Install JDK, Maven, and Eclipse JDT.
 
 2. Use the following command to setup an Eclipse project.
 
