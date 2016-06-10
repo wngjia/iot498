@@ -14,5 +14,5 @@
    mvn eclipse:eclipse -DdownloadSources -DdownloadJavadocs
    ```
 
-4. Test your server by running `server/bat` and point your browser
+4. Test your server by running `server/bat` and then pointing your browser
    to [127.0.0.1:8080](http://127.0.0.1:8080).
