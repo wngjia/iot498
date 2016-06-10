@@ -11,7 +11,7 @@
 3. Use the following command to build a package for deployment.
 
    ```
-   mvn eclipse:eclipse -DdownloadSources -DdownloadJavadocs
+   mvn package
    ```
 
 4. Test your server by running `server/bat` and then pointing your browser
