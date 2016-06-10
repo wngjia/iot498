@@ -1,0 +1,37 @@
+{
+server: {
+  rootPath: "/app/",
+  requestLog: {
+    appenders: [{
+      type: "file",
+      currentLogFilename: "request.log",
+      archive: false
+    }]
+  }
+},
+
+logging: {
+  level: "DEBUG",
+  loggers: {
+    "org.eclipse.jetty": "INFO",
+    "org.hibernate.validator": "INFO",
+    "com.datastax.driver.core": "INFO",
+    "io.netty": "INFO"
+  },
+  appenders: [{
+    type: "console",
+    threshold: "INFO",
+    target: "stdout"
+  },{
+    type: "file",
+    threshold: "INFO",
+    currentLogFilename: "info.log",
+    archive: false
+  },{
+    type: "file",
+    threshold: "DEBUG",
+    currentLogFilename: "debug.log",
+    archive: false
+  }]
+}  
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Welcome to IoT-498!</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Welcome to IoT-498!</h1>
+
+<hr>
+<h2>List of Owners</h2>
+<div id="owners"></div>
+
+<hr>
+<h2>Add a Device</h2>
+<form role="form">
+  <div class="row">
+    <div class="form-group col-xs-2">
+      <label for="owner">Owner</label>
+      <input type="text" class="form-control" id="owner">
+    </div>
+    <div class="form-group col-xs-2">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name">
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-xs-4">
+      <label for="desc">Description</label>
+      <textarea class="form-control" rows="5" id="desc"></textarea>
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary" onclick="add_device()">
+    Add
+  </button>
+</form>
+
+</div>
+
+<script>
+$(document).ready(main);
+
+function main()
+{
+	refresh_owners();
+}
+
+function show_owners(owners)
+{
+	var owners_html = "";
+	for (var k = 0; k < owners.length; ++k) 
+	{
+		owners_html += "<a "
+			+"class='btn btn-primary' "
+			+"href='/devices.html?"+owners[k]+"' "
+			+">"+owners[k]+"</a>";
+		owners_html += "&nbsp";
+	}
+	
+	$("#owners").html(owners_html);
+}
+
+function refresh_owners()
+{
+	$.ajax({
+		url: "/app/devices",
+		type: "GET",
+		success: show_owners
+	});
+}
+
+function add_device()
+{
+	var device = {
+		name: $("#name").val(),
+		description: $("#desc").val()
+	};
+
+	$.ajax({
+		type: "POST",
+		url: "/app/devices/"+$("#owner").val(),
+		data: device,
+		success: refresh_owners
+	});
+}
+
+</script>
+
+</body>
+</html>

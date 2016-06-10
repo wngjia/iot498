@@ -1,0 +1,7 @@
+target/
+/.classpath
+/.pydevproject
+/.project
+/.settings
+/*.log
+/*.jar

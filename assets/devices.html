@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Welcome to IoT-498!</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 id="title"></h1>
+
+<hr>
+<h2>List of Devices</h2>
+<div id="devices"></div>
+
+<hr>
+<h2>Add a Device</h2>
+<form role="form">
+  <div class="row">
+    <div class="form-group col-xs-2">
+      <label for="owner">Owner</label>
+      <input type="text" class="form-control" id="owner" disabled>
+    </div>
+    <div class="form-group col-xs-2">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name">
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-xs-4">
+      <label for="desc">Description</label>
+      <textarea class="form-control" rows="5" id="desc"></textarea>
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary" onclick="add_device()">
+    Add
+  </button>
+</form>
+
+</div>
+
+<script>
+$(document).ready(main);
+
+var owner = self.location.search.substr(1);
+
+function main()
+{
+	$("#title").text("Welcome "+owner+"!");
+	$("#owner").val(owner);
+	
+	refresh_devices();
+}
+
+function show_devices(devices)
+{
+	var devices_html = "<table class='table table-bordered table-striped'>";
+	
+	devices_html += "<thead><tr>"
+		+"<td></td>"
+		+"<td>Name</td>"
+		+"<td>Internal ID</td>"
+		+"<td>Description</td>"
+		+"</tr></thead>";
+
+	for (var k = 0; k < devices.length; ++k) 
+	{
+		devices_html += "<tr>"
+		devices_html += "<td><a "
+			+"class='btn btn-primary' "
+			+"href='/device-chart.html?"+devices[k].id+"' "
+			+">Chart</a></td>";
+		devices_html += "<td>"+devices[k].name+"</td>";
+		devices_html += "<td>"+devices[k].id+"</td>";
+		devices_html += "<td>"+devices[k].description+"</td>";
+		devices_html += "</tr>";
+	}
+	
+	devices_html += "</table>";
+	
+	$("#devices").html(devices_html);
+}
+
+function refresh_devices()
+{
+	$.ajax({
+		url: "/app/devices/"+owner,
+		type: "GET",
+		success: show_devices
+	});
+}
+
+function add_device()
+{
+	var device = {
+		name: $("#name").val(),
+		description: $("#desc").val()
+	};
+
+	$.ajax({
+		type: "POST",
+		url: "/app/devices/"+owner,
+		data: device,
+		success: refresh_devices
+	});
+}
+
+</script>
+
+</body>
+</html>
