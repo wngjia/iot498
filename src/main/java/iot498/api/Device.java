@@ -1,5 +1,8 @@
 package iot498.api;
 
+/**
+ * A device that generates a stream of data. 
+ */
 public class Device
 {
 	public Device(String owner, String id,

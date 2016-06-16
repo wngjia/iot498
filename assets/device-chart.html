@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Welcome to IoT-498!</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 id="title"></h1>
+
+<hr>
+<h2>Last 30 seconds</h2>
+<div style="height:300px;" id="chart"></div>
+
+</div>
+
+<script>
+$(document).ready(main);
+
+var device_id = self.location.search.substr(1);
+var my_chart = null;
+
+function main()
+{
+	$("#title").text("Device Chart ("+device_id+")");
+	
+	init_chart();
+	
+	window.setInterval(refresh_chart, 500);
+}
+
+function init_chart()
+{
+	my_chart = echarts.init(document.getElementById("chart"));
+	
+	var option = {
+		
+		animation: false,
+		
+		xAxis: [{
+			type: 'time'
+		}],
+
+		yAxis: [{
+			type: 'value',
+			scale: true
+		}],
+
+		series: [{
+			name: 'raw',
+			type: 'line',
+			showSymbol: false,
+			data: []
+		}]
+	};
+
+	my_chart.setOption(option);
+}
+
+function update_chart(entries)
+{
+	var data = [];
+	
+	for (var i = 0; i < entries.length; ++i)
+		data.push([entries[i].ts, entries[i].val]);
+	
+	var option = {
+		series: [{
+			data: data
+		}]
+	};
+
+	my_chart.setOption(option);
+}
+
+function refresh_chart()
+{
+	var millis = new Date().getTime()-30000;
+	
+	$.ajax({
+		url: "/app/data/raw/"+device_id+"?ts_begin="+millis,
+		type: "GET",
+		success: update_chart
+	});
+}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/3.1.10/echarts.js"></script>
+
+</body>
+</html>

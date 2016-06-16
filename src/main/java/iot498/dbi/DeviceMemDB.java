@@ -1,4 +1,4 @@
-package iot498;
+package iot498.dbi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,14 +6,9 @@ import java.util.HashMap;
 import iot498.api.Device;
 
 /**
- * This is supposed to provide database access.
- * Since we don't have a database now,
- * it serves as a database as well.
- * 
- * @author wj
- *
+ * In-memory database for device information (owner etc.)
  */
-public class MyDatabase
+public class DeviceMemDB
 {
 	public synchronized
 	ArrayList<String> getOwners()
@@ -32,7 +27,7 @@ public class MyDatabase
 	}
 	
 	public synchronized
-	void add(String owner, String id,
+	Device add(String owner, String id,
 		String name, String description)
 	{
 		HashMap<String, Device> devices = db.get(owner);
@@ -45,8 +40,11 @@ public class MyDatabase
 		
 		assert !devices.containsKey(id);
 
-		devices.put(id, new Device(
-			owner, id, name, description));
+		Device ret = new Device(owner, id, name, description);
+		
+		devices.put(id, ret);
+		
+		return ret;
 	}
 
 	public synchronized

@@ -23,14 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.dropwizard.jersey.caching.CacheControl;
-import iot498.MyDatabase;
 import iot498.api.Device;
+import iot498.dbi.DeviceMemDB;
 
 @Path("/devices")
 @Produces(MediaType.APPLICATION_JSON)
 public class DevicesResource
 {
-	public DevicesResource(MyDatabase dbi)
+	public DevicesResource(DeviceMemDB dbi)
 	{
 		this.dbi = dbi;
 	}
@@ -44,7 +44,7 @@ public class DevicesResource
 		ret.sort((l, r) -> l.compareToIgnoreCase(r));
 		
 		return ret;
-    }
+	}
 	
 	@GET @Path("/{owner}")
 	@CacheControl(noCache=true)
@@ -56,7 +56,7 @@ public class DevicesResource
 		ret.sort((l, r) -> l.name.compareToIgnoreCase(r.name));
 		
 		return ret;
-    }
+	}
 
 	@POST @Path("/{owner}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -75,7 +75,7 @@ public class DevicesResource
 		URI self = uri.getAbsolutePathBuilder().path(id).build();
 		
 		return Response.created(self).build();
-    }
+	}
 	
 	@DELETE @Path("/{owner}/{id}")
 	public Response delete(
@@ -87,12 +87,12 @@ public class DevicesResource
 		dbi.remove(owner, id);
 		
 		return Response.ok().build();
-    }
+	}
 	
-    @Context
-    UriInfo uri;
+	@Context
+	UriInfo uri;
 
-    private final MyDatabase dbi;
+	private final DeviceMemDB dbi;
     
 	private static final Logger logger
 		= LoggerFactory.getLogger(DevicesResource.class);

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Welcome to IoT-498!</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Welcome to IoT-498!</h1>
+
+<hr>
+<h2>List of Device Simulations</h2>
+<div id="sims"></div>
+
+<hr>
+<h2>Add a Device Simulation</h2>
+<form role="form">
+  <div class="row">
+    <div class="form-group col-xs-8">
+      <label for="id">Device ID</label>
+      <input type="text" class="form-control" id="id">
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-xs-2">
+      <label for="hz">Frequency (Hz)</label>
+      <input type="number" step="1" class="form-control" id="hz">
+    </div>
+    <div class="form-group col-xs-2">
+      <label for="min">Min Value</label>
+      <input type="number" class="form-control" id="min">
+    </div>
+    <div class="form-group col-xs-2">
+      <label for="max">Max Value</label>
+      <input type="number" class="form-control" id="max">
+    </div>
+    <div class="form-group col-xs-2">
+      <label for="steps">Steps</label>
+      <input type="number" min="1" step="1" class="form-control" id="steps">
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary" onclick="add_sim()">
+    Add
+  </button>
+</form>
+
+</div>
+
+<script>
+$(document).ready(main);
+
+function main()
+{
+	refresh_sims();
+}
+
+function show_sims(sims)
+{
+	var sims_html = "<table class='table table-bordered table-striped'>";
+	
+	sims_html += "<thead><tr>"
+		+"<td>Device ID</td>"
+		+"<td>Frequency (Hz)</td>"
+		+"<td>Min Value</td>"
+		+"<td>Max Value</td>"
+		+"<td>Steps</td>"
+		+"</tr></thead>";
+
+	for (var k = 0; k < sims.length; ++k) 
+	{
+		sims_html += "<tr>"
+		sims_html += "<td>"+sims[k].id+"</td>";
+		sims_html += "<td>"+sims[k].hz+"</td>";
+		sims_html += "<td>"+sims[k].min+"</td>";
+		sims_html += "<td>"+sims[k].max+"</td>";
+		sims_html += "<td>"+sims[k].steps+"</td>";
+		sims_html += "</tr>";
+	}
+	
+	sims_html += "</table>";
+	
+	$("#sims").html(sims_html);
+}
+
+function refresh_sims()
+{
+	$.ajax({
+		url: "/app/device-sims",
+		type: "GET",
+		success: show_sims
+	});
+}
+
+function add_sim()
+{
+	var sim = {
+		id: $("#id").val(),
+		hz: $("#hz").val(),
+		min: $("#min").val(),
+		max: $("#max").val(),
+		steps: $("#steps").val()
+	};
+
+	$.ajax({
+		type: "POST",
+		url: "/app/device-sims",
+		data: sim,
+		success: refresh_sims
+	});
+}
+
+</script>
+
+</body>
+</html>
